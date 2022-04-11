@@ -201,7 +201,7 @@ class RateMyAppStarDialogState extends State<RateMyAppStarDialog> {
           Padding(
             padding: widget.dialogStyle.messagePadding,
             child: Text(
-              widget.message,
+              "ola fkldsjflsdn",
               style: widget.dialogStyle.messageStyle,
               textAlign: widget.dialogStyle.messageAlign,
             ),
