@@ -198,12 +198,10 @@ class RateMyAppStarDialogState extends State<RateMyAppStarDialog> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: widget.dialogStyle.messagePadding,
-            child: Text(
-              "ola fkldsjflsdn",
-              style: widget.dialogStyle.messageStyle,
-              textAlign: widget.dialogStyle.messageAlign,
+          const Text(
+            'Teste de pacote',
+            style: TextStyle(
+              color: Colors.red,
             ),
           ),
           SmoothStarRating(
