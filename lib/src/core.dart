@@ -178,18 +178,6 @@ class RateMyApp {
       context: context,
       builder: (context) => RateMyAppStarDialog(
         this,
-        title: title ?? 'Rate this app',
-        message: message ??
-            'You like this app ? Then take a little bit of your time to leave a rating :',
-        contentBuilder:
-            contentBuilder ?? ((context, defaultContent) => defaultContent),
-        actionsBuilder: actionsBuilder,
-        dialogStyle: dialogStyle ??
-            const DialogStyle(
-              titleAlign: TextAlign.center,
-              messageAlign: TextAlign.center,
-              messagePadding: EdgeInsets.only(bottom: 20),
-            ),
         starRatingOptions: starRatingOptions ?? const StarRatingOptions(),
       ),
     );

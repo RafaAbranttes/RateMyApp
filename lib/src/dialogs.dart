@@ -129,56 +129,21 @@ class RateMyAppStarDialog extends StatefulWidget {
   /// The Rate my app instance.
   final RateMyApp rateMyApp;
 
-  /// The dialog's title.
-  final String title;
-
-  /// The dialog's message.
-  final String message;
-
-  /// The content builder.
-  final DialogContentBuilder contentBuilder;
-
-  /// The rating changed callback.
-  final StarDialogActionsBuilder actionsBuilder;
-
-  /// The dialog's style.
-  final DialogStyle dialogStyle;
-
   /// The smooth star rating style.
   final StarRatingOptions starRatingOptions;
+
+  /// Text Style button
+  final TextStyle textStyle;
 
   /// Creates a new Rate my app star dialog.
   const RateMyAppStarDialog(
     this.rateMyApp, {
-    @required this.title,
-    @required this.message,
-    @required this.contentBuilder,
-    this.actionsBuilder,
-    @required this.dialogStyle,
     @required this.starRatingOptions,
-  })  : assert(title != null),
-        assert(message != null),
-        assert(dialogStyle != null),
-        assert(starRatingOptions != null);
+    this.textStyle,
+  }) : assert(starRatingOptions != null);
 
   @override
   State<StatefulWidget> createState() => RateMyAppStarDialogState();
-
-  /// Used when there is no onRatingChanged callback.
-  List<Widget> _defaultOnRatingChanged(BuildContext context, double rating) => [
-        RateMyAppRateButton(
-          rateMyApp,
-          text: 'RATE',
-        ),
-        RateMyAppLaterButton(
-          rateMyApp,
-          text: 'MAYBE LATER',
-        ),
-        RateMyAppNoButton(
-          rateMyApp,
-          text: 'NO',
-        ),
-      ];
 }
 
 /// The Rate my app star dialog state.
@@ -199,29 +164,35 @@ class RateMyAppStarDialogState extends State<RateMyAppStarDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           SmoothStarRating(
-            onRated: (rating) {
+            onRatingChanged: (rating) async {
               setState(() => _currentRating = rating);
+              widget.starRatingOptions.fuctionClickStar();
+              Future.delayed(
+                const Duration(milliseconds: 300),
+                () async {
+                  await widget.rateMyApp
+                      .callEvent(RateMyAppEventType.rateButtonPressed);
+                  Navigator.pop<RateMyAppDialogButton>(
+                      context, RateMyAppDialogButton.rate);
+
+                  await widget.rateMyApp.launchStore();
+                },
+              );
             },
+            filledSVG: widget.starRatingOptions.filledSVG,
+            halFilledSVG: widget.starRatingOptions.halFilledSVG,
             color: widget.starRatingOptions.starsFillColor,
             borderColor: widget.starRatingOptions.starsBorderColor,
             spacing: widget.starRatingOptions.starsSpacing,
             size: widget.starRatingOptions.starsSize,
             allowHalfRating: widget.starRatingOptions.allowHalfRating,
-            halfFilledIconData: widget.starRatingOptions.halfFilledIconData,
-            filledIconData: widget.starRatingOptions.filledIconData,
             rating: _currentRating == null ? 0.0 : _currentRating.toDouble(),
           ),
         ],
       ),
     );
 
-    return AlertDialog(
-      content: widget.contentBuilder(context, content),
-      contentPadding: widget.dialogStyle.contentPadding,
-      shape: widget.dialogStyle.dialogShape,
-      actions: (widget.actionsBuilder ?? widget._defaultOnRatingChanged)(
-          context, _currentRating),
-    );
+    return content;
   }
 }
 
@@ -239,17 +210,31 @@ abstract class _RateMyAppDialogButton extends StatelessWidget {
   /// Called when the action has been executed.
   final VoidCallback callback;
 
+  ///style text button
+  final TextStyle textStyle;
+
   /// Creates a new Rate my app button widget instance.
   const _RateMyAppDialogButton(
     this.rateMyApp, {
     @required this.text,
     this.validator = _validatorTrue,
     this.callback,
+    this.textStyle,
   }) : assert(text != null);
 
   @override
   Widget build(BuildContext context) => FlatButton(
-        child: Text(text),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(45.0),
+        ),
+        child: Text(
+          text,
+          style: textStyle ??
+              const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+              ),
+        ),
         onPressed: () async {
           if (validator != null && !validator()) {
             return;
@@ -300,11 +285,13 @@ class RateMyAppLaterButton extends _RateMyAppDialogButton {
     @required String text,
     Validator validator,
     VoidCallback callback,
+    TextStyle textStyle,
   }) : super(
           rateMyApp,
           text: text,
           validator: validator,
           callback: callback,
+          textStyle: textStyle,
         );
 
   @override

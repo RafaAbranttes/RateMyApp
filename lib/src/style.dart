@@ -59,11 +59,13 @@ class StarRatingOptions {
   /// Whether we allow half-stars ratings.
   final bool allowHalfRating;
 
-  /// The half filled icon.
-  final IconData halfFilledIconData;
+  /// Fill Button
+  final String filledSVG;
 
-  /// The filled icon.
-  final IconData filledIconData;
+  /// HalFilledSVG button
+  final String halFilledSVG;
+
+  final Function fuctionClickStar;
 
   /// Creates a new star rating options instance.
   const StarRatingOptions({
@@ -73,8 +75,9 @@ class StarRatingOptions {
     this.starsSpacing = 0,
     this.initialRating = 0.0,
     this.allowHalfRating = false,
-    this.halfFilledIconData = Icons.star_half,
-    this.filledIconData = Icons.star,
+    this.fuctionClickStar,
+    @required this.filledSVG,
+    @required this.halFilledSVG,
   })  : assert(starsSize != null),
         assert(allowHalfRating != null);
 }
