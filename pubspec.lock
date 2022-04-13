@@ -180,9 +180,11 @@ packages:
   smooth_star_rating:
     dependency: "direct main"
     description:
-      path: "../smoothratingbar"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: "396ee2d84934eb9bb3b059082181608ebb0f7d78"
+      url: "https://github.com/RafaAbranttes/smoothratingbar.git"
+    source: git
     version: "1.0.4+2"
   typed_data:
     dependency: transitive
